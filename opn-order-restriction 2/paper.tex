@@ -1,0 +1,630 @@
+\documentclass[11pt]{article}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[margin=1.05in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{microtype}
+\usepackage{booktabs,array}
+\usepackage[colorlinks=true,linkcolor=black,citecolor=black,urlcolor=blue]{hyperref}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+\DeclareMathOperator{\ord}{ord}
+\newcommand{\vp}{v_P}
+\newcommand{\phithree}[1]{(#1^2+#1+1)}
+\newcommand{\phisix}[1]{(#1^2-#1+1)}
+\title{Orders Three and Six at the Largest Prime Divisor\protect\\ of an Odd Perfect Number}
+\author{}
+\date{October 9, 2026}
+\begin{document}
+\maketitle
+\vspace{-1.3em}
+\begin{abstract}
+Let $N$ be an odd perfect number and $P$ its largest prime divisor. We prove that components whose bases have multiplicative order $3$ or $6$ modulo $P$ contribute at most two to $v_P(\sigma(N))$, and at most one if $3\nmid N$. We sharpen this bound using the available $3$-adic valuation and the Euler prime. A further refinement concerns distinct fourth-power prime divisors: if $P\equiv1\pmod3$, then $K+v_3(N)\ge2v_3(a_P+1)+\delta$, with $K$ and $\delta$ defined explicitly below. In the opposite direction, cyclotomic values give an upper bound for the contribution outside orders $3$ and $6$. If there are $M$ contributing components and $m$ is the odd part of $P-1$, their total contribution is at most $M(\varphi(m)-1)$. All stated bounds have accompanying compiled Lean 4 proofs. Publication priority is not claimed.
+\end{abstract}
+
+\section{Statement and notation}
+
+Write $\sigma(n)=\sum_{d\mid n}d$. Throughout, $N$ denotes an odd perfect number, so that $\sigma(N)=2N$, and
+\[
+ N=\prod_{q\in S}q^{a_q},\qquad
+ S=\{q:q\text{ is prime and }q\mid N\},\qquad P=\max S.
+\]
+For a prime $r$, the valuation $v_r(m)$ is the exponent of $r$ in the positive integer $m$. For $q\in S\setminus\{P\}$, set
+\[
+ d_q=\ord_P(q),\qquad w_q=v_P\bigl(\sigma(q^{a_q})\bigr),
+ \qquad
+ H=\{q\in S:q<P,\ d_q\notin\{3,6\}\}.
+\]
+A component $q^{a_q}$ contributes to $P$ when $w_q>0$. Define
+\[
+ c(N)=\begin{cases}2,&3\mid N,\\1,&3\nmid N.\end{cases}
+\]
+
+\begin{theorem}\label{thm:main}
+The contributions to $P$ satisfy
+\begin{equation}\label{eq:lowbound}
+ \sum_{\substack{q\in S,\ q<P\\d_q\in\{3,6\}}}w_q\le c(N).
+\end{equation}
+Consequently,
+\begin{equation}\label{eq:main}
+ \boxed{\displaystyle\sum_{q\in H}w_q\ge a_P-c(N).}
+\end{equation}
+\end{theorem}
+
+The valuation formulas underlying factor-chain arguments are classical; see, for example, Voight~\cite{Voight}. Relations between distinct bases sharing a factor of $x^2+x+1$ occur in Clayton and Hansen~\cite{ClaytonHansen}. The assertion here is the combined bound for arbitrary component exponents, including contributions of order $6$. No claim of publication priority is made.
+
+\section{Valuations at the largest prime}
+
+\begin{lemma}\label{lem:noexponent}
+For every $q\in S$, one has $P\nmid a_q+1$.
+\end{lemma}
+\begin{proof}
+Suppose that $P\mid a_q+1$. Then
+\[
+ C=1+q+\cdots+q^{P-1}
+\]
+divides $\sigma(q^{a_q})$. The integer $C$ is odd and greater than one. Since $q\le P$ is prime, $q\not\equiv1\pmod P$. Fermat's little theorem, including the case $q=P$, gives $C\equiv1\pmod P$.
+
+Let $r$ be a prime divisor of $C$. Then $r$ is odd and $r\ne P$. Also $r\nmid q$. If $q\equiv1\pmod r$, then $C\equiv P\pmod r$, contrary to $r\ne P$. Thus $q^P\equiv1\pmod r$ and $q\not\equiv1\pmod r$. As $P$ is prime, $\ord_r(q)=P$. It follows that $P\mid r-1$, and hence $r>P$.
+
+On the other hand, $r\mid C\mid\sigma(q^{a_q})\mid2N$. Since $r$ is odd, $r\mid N$, contradicting the definition of $P$.
+\end{proof}
+
+\begin{lemma}\label{lem:valuation}
+For $q\in S\setminus\{P\}$,
+\[
+ P\mid\sigma(q^{a_q})\quad\Longleftrightarrow\quad d_q\mid a_q+1.
+\]
+When these equivalent conditions hold,
+\begin{equation}\label{eq:valuation}
+ w_q=v_P(q^{d_q}-1)=v_P(q^{P-1}-1).
+\end{equation}
+Moreover,
+\begin{equation}\label{eq:balance}
+ a_P=\sum_{q\in S\setminus\{P\}}w_q.
+\end{equation}
+\end{lemma}
+\begin{proof}
+Since $q<P$, the prime $P$ does not divide $q-1$. The identity
+\[
+ \sigma(q^{a_q})=\frac{q^{a_q+1}-1}{q-1}
+\]
+therefore gives the equivalence. If $a_q+1=d_qm$, Lemma~\ref{lem:noexponent} implies $P\nmid m$, while
+\[
+ \frac{q^{d_qm}-1}{q^{d_q}-1}
+ =1+q^{d_q}+\cdots+q^{d_q(m-1)}\equiv m\not\equiv0\pmod P.
+\]
+This proves the first equality in~\eqref{eq:valuation}. The second follows by the same argument with $m=(P-1)/d_q$.
+
+Finally, $\sigma(P^{a_P})\equiv1\pmod P$. Taking $P$-adic valuations in $\prod_{q\in S}\sigma(q^{a_q})=2N$ proves~\eqref{eq:balance}.
+\end{proof}
+
+\section{The contributions of orders three and six}
+
+\begin{lemma}\label{lem:unit}
+If $q<P$ contributes to $P$ and $d_q\in\{3,6\}$, then $w_q=1$.
+\end{lemma}
+\begin{proof}
+If $d_q=3$, then $P\mid q^2+q+1$. The primes $q$ and $P$ are odd, so $q\le P-2$, and
+\[
+ 0<q^2+q+1\le P^2-3P+3<P^2.
+\]
+It follows that $v_P(q^2+q+1)=1$. As $P\nmid q-1$, Lemma~\ref{lem:valuation} gives $w_q=1$.
+
+If $d_q=6$, then $P\mid q^2-q+1$. In the factorization
+\[
+ q^6-1=(q-1)(q+1)(q^2+q+1)(q^2-q+1),
+\]
+the first three factors are not divisible by $P$: divisibility of any of them would give order $1$, $2$, or $3$. Since $0<q^2-q+1<P^2$, equation~\eqref{eq:valuation} again gives $w_q=1$.
+\end{proof}
+
+\begin{lemma}\label{lem:incompatible}
+There do not exist odd primes $u,v<P$ satisfying
+\[
+ \ord_P(u)=3,\qquad \ord_P(v)=6.
+\]
+\end{lemma}
+\begin{proof}
+Such primes would satisfy $P\mid u^2+u+1$ and $P\mid v^2-v+1$. Subtracting yields
+\[
+ P\mid(u+v)(u-v+1).
+\]
+The positive integer $u+v$ is even and less than $2P$, so it is not divisible by the odd prime $P$. The integer $u-v+1$ is odd and has absolute value less than $P$, so it too is not divisible by $P$. This is a contradiction.
+\end{proof}
+
+\begin{lemma}\label{lem:count}
+At most two primes contribute to $P$ through order $3$, and at most one contributes through order $6$. If $3\nmid N$, at most one contributes through order $3$.
+\end{lemma}
+\begin{proof}
+Primes of order $3$ are roots of $x^2+x+1$ modulo $P$. This polynomial has at most two roots, and distinct primes below $P$ represent distinct residues.
+
+If a prime $q$ contributes through order $6$, then $6\mid a_q+1$, so $a_q$ is odd. For an odd base $q$, the sum $\sigma(q^{a_q})$ is then even. Two distinct such components would make $4\mid\sigma(N)=2N$, contrary to the oddness of $N$. Thus there is at most one.
+
+For the last assertion, suppose $3\nmid N$ and two distinct primes $u,v<P$ contribute through order $3$. The congruences for the two roots give
+\[
+ P\mid(u-v)(u+v+1).
+\]
+Since $u\ne v$ and $0<u+v+1<2P$, this forces
+\begin{equation}\label{eq:pair}
+ u+v+1=P.
+\end{equation}
+Order $3$ implies $P\equiv1\pmod3$. Neither $u$ nor $v$ equals $3$, and~\eqref{eq:pair} shows that their residues modulo $3$ are $1$ and $2$. Suppose $u\equiv1\pmod3$. Because $3\mid a_u+1$, one has
+\[
+ \sigma(u^{a_u})\equiv a_u+1\equiv0\pmod3.
+\]
+As $\sigma(u^{a_u})\mid2N$, this contradicts $3\nmid N$.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:main}]
+By Lemma~\ref{lem:incompatible}, the contributing primes cannot include both an order-$3$ prime and an order-$6$ prime. Lemmas~\ref{lem:unit} and~\ref{lem:count} therefore give~\eqref{eq:lowbound}. Subtracting that bound from~\eqref{eq:balance} proves~\eqref{eq:main}.
+\end{proof}
+
+\section{Consequences}
+
+\begin{corollary}\label{cor:fourth}
+If $P^4\mid N$, then at least one of the following holds:
+\begin{itemize}
+\item There are distinct primes $u,v\in H$ such that
+\[
+ P\mid\sigma(u^{a_u}),\qquad P\mid\sigma(v^{a_v}).
+\]
+\item There is a prime $q\in H$ such that
+\[
+ P\mid\sigma(q^{a_q}),\qquad q^{P-1}\equiv1\pmod{P^2}.
+\]
+\end{itemize}
+\end{corollary}
+\begin{proof}
+Theorem~\ref{thm:main} gives $\sum_{q\in H}w_q\ge2$. Either at least two summands are positive, or a single summand is at least two. In the latter case, equation~\eqref{eq:valuation} gives $P^2\mid q^{P-1}-1$.
+\end{proof}
+
+\begin{corollary}\label{cor:exception}
+Suppose $P\nmid\sigma(q^{a_q})$ for every $q\in H$. Then either $a_P=1$, or $a_P=2$, $3\mid N$, and there are distinct primes $u,v<P$ dividing $N$ such that
+\[
+ d_u=d_v=3,\qquad 3\mid a_u+1,\qquad 3\mid a_v+1,
+\]
+\[
+ u+v+1=P,\qquad P\mid u^2+u+1,\qquad P\mid v^2+v+1.
+\]
+\end{corollary}
+\begin{proof}
+Theorem~\ref{thm:main} gives $a_P\le2$. If $a_P=2$, the improved bound implies $3\mid N$. The two required contributions cannot come from order $6$, which has at most one contributing prime. They therefore come from two distinct primes of order $3$. Lemma~\ref{lem:valuation} gives the shifted-exponent divisibilities, and the calculation in~\eqref{eq:pair} gives their sum.
+\end{proof}
+
+\begin{corollary}\label{cor:exponents}
+If $q\in H$ contributes to $P$, then $a_q\ge4$. If $a_q$ is odd, then $a_q\ge9$; in particular, this applies when $q$ is the Euler prime, the prime occurring to an odd exponent.
+\end{corollary}
+\begin{proof}
+An odd prime $q<P$ cannot have order $1$ or $2$ modulo $P$: these would require $q=1$ or $q=P-1$, respectively. Also $4\nmid a_q+1$. Indeed, if $4\mid a_q+1$, then
+\[
+ (q+1)(q^2+1)=\sigma(q^3)\mid\sigma(q^{a_q}),
+\]
+and both factors on the left are even, contradicting $\sigma(q^{a_q})\mid2N$.
+
+Since $d_q\mid a_q+1$, exponents $1$ and $2$ would give orders $2$ and $3$, while exponent $3$ is excluded by the preceding argument. Thus $a_q\ge4$. If $a_q$ is odd and less than $9$, the only remaining possibilities are $5$ and $7$. Exponent $5$ allows only orders $1,2,3,6$, and exponent $7$ makes $4\mid a_q+1$. Both are impossible.
+\end{proof}
+
+\section{The 3-adic and Euler-prime refinements}\label{sec:three}
+
+Set
+\[
+ W=\sum_{q\in H}w_q,\qquad L=a_P-W,\qquad
+ b=v_3(N),\qquad t=v_3(a_P+1).
+\]
+There is exactly one prime divisor $e$ of $N$ for which $a_e$ is odd. Indeed,
+$\sigma(q^{a_q})$ is even precisely when $a_q$ is odd, and the product of these
+components is $2N$, which has $2$-adic valuation one. We call $e$ the Euler prime.
+Define
+\[
+ \delta=\begin{cases}
+ v_3(e+1)+v_3(a_e+1),& e\equiv2\pmod3,\\
+ 0,&\text{otherwise}.
+ \end{cases}
+\]
+The standard lifting-the-exponent identities give
+\begin{align}
+ v_3(\sigma(q^{a_q}))&=v_3(a_q+1)
+       &&\text{if }q\equiv1\pmod3,\label{eq:threeone}\\
+ v_3(\sigma(e^{a_e}))&=\delta
+       &&\text{if }e\equiv2\pmod3.\label{eq:threetwo}
+\end{align}
+These are instances of the classical component valuation formulas; see
+Voight~\cite{Voight}. Also
+\begin{equation}\label{eq:threebalance}
+ \sum_{q\in S}v_3(\sigma(q^{a_q}))=b.
+\end{equation}
+
+\begin{theorem}\label{thm:three}
+For $s=t+\delta$, define
+\[
+ A(b,s)=\begin{cases}
+ 0,& b<s,\\
+ 1,& b=s,\\
+ 2,& b>s.
+ \end{cases}
+\]
+Then
+\[
+ \boxed{W\ge a_P-A(b,t+\delta).}
+\]
+In particular, $W\ge a_P-A(b,t)$.
+\end{theorem}
+\begin{proof}
+The original bound gives $0\le L\le2$. If $L>0$, there is a contributing prime
+of order $3$ or $6$ modulo $P$, so $P\equiv1\pmod3$. The component at $P$
+then contributes $t$ to~\eqref{eq:threebalance}. If $e\equiv2\pmod3$, the Euler
+prime differs from $P$ and contributes an additional $\delta$. Thus
+\[
+ L>0\quad\Longrightarrow\quad b\ge t+\delta.
+\]
+If $L=2$, Lemmas~\ref{lem:incompatible} and~\ref{lem:count} give two distinct
+contributing order-$3$ primes $u,v<P$ with $u+v+1=P$. Neither is $3$: otherwise
+the other would also be $0$ modulo $3$, hence also $3$. Their residues modulo $3$
+are therefore $1$ and $2$. Label them so that $u\equiv1\pmod3$.
+Since $3\mid a_u+1$, equation~\eqref{eq:threeone} supplies at least one further
+unit of $3$-adic valuation. This component differs from $P$ and, when
+$e\equiv2\pmod3$, also from $e$. Consequently
+\[
+ L=2\quad\Longrightarrow\quad b\ge t+\delta+1.
+\]
+These two implications prove the displayed piecewise bound. Omitting the
+nonnegative Euler-prime contribution gives the bound with $t$ alone.
+\end{proof}
+
+For example, if $a_3=2$ and $a_P=8$, then $b=t=2$, so $W\ge7$.
+If also $e\equiv2\pmod3$, then $\delta\ge1$ and $W=8$.
+If $3\nmid N$ and $a_P=2$, then $b=0<t=1$, so $W=2$; the argument of
+Corollary~\ref{cor:fourth} then gives two contributing primes in $H$ or a
+contributing prime satisfying the congruence modulo $P^2$.
+
+\section{Distinct fourth-power prime divisors}\label{sec:fourthcount}
+
+Define
+\[
+ K=\#\{r\in S:r<P,\ r\equiv1\pmod3,\ a_r\ge4\}.
+\]
+The following condition couples the preceding valuation restriction to the
+number of distinct prime divisors occurring at least to the fourth power.
+
+\begin{theorem}\label{thm:fourthcount}
+If $P\equiv1\pmod3$, then
+\begin{equation}\label{eq:fourthcount}
+ \boxed{K+b\ge2t+\delta.}
+\end{equation}
+In particular, $K+b\ge2t$. If $b=t+\delta$, then $K\ge t$.
+\end{theorem}
+\begin{proof}
+For $0\le j<t$, put
+\[
+ x_j=P^{3^j},\qquad
+ C_j=\frac{x_j^2+x_j+1}{3}=\frac{\Phi_{3^{j+1}}(P)}{3}.
+\]
+We first establish four properties of these integers.
+
+Since $x_j\equiv1\pmod3$, write $x_j=3k+1$. Then
+\[
+ x_j^2+x_j+1=3(3k^2+3k+1),\qquad C_j\equiv1\pmod3.
+\]
+In particular, $3\nmid C_j$. Also $x_j\ge P>1$ and
+$x_j^2+x_j+1>3x_j$, so $C_j>P$.
+
+Next, $3^{j+1}\mid a_P+1$, and the geometric-series factorization gives
+\[
+ x_j^2+x_j+1\mid\sigma(P^{a_P}).
+\]
+Thus $C_j\mid2N$. The numerator and $C_j$ are odd, so $C_j\mid N$.
+
+If a prime $r$ divides $C_j$, then $r\ne3$ and
+$x_j^2+x_j+1\equiv0\pmod r$. Hence $x_j^3\equiv1\pmod r$, whereas
+$x_j\not\equiv1\pmod r$, since the latter would force $r=3$.
+It follows that $\ord_r(x_j)=3$ and $r\equiv1\pmod3$.
+Moreover, $P$ does not divide $C_j$, so maximality of $P$ gives $r<P$.
+
+Finally, suppose $i<j$ and a prime $r$ divides both $C_i$ and $C_j$.
+Divisibility of $C_i$ implies $P^{3^{i+1}}\equiv1\pmod r$, and hence
+$P^{3^j}\equiv1\pmod r$. Divisibility of $C_j$ would then give
+$0\equiv1+1+1\pmod r$, contrary to $r\ne3$. The integers $C_j$
+are therefore pairwise coprime.
+
+Every $C_j$ has a prime divisor $r_j$ for which $a_{r_j}\ge2$.
+Otherwise all its prime divisors would occur in $N$ to exponent one. Each
+would have to be the unique prime $e$ with odd exponent, and $C_j\mid N$
+would force $C_j\mid e$. This contradicts $C_j>P\ge e$.
+Choose one such $r_j$ for each $j$. The coprimality just proved makes these
+$t$ primes distinct, and all satisfy $r_j<P$ and $r_j\equiv1\pmod3$.
+
+Exponent three is impossible by the argument in Corollary~\ref{cor:exponents}.
+Thus each selected prime either has exponent at least four or has exponent
+exactly two. Let $R$ be the number with exponent two. By~\eqref{eq:threeone},
+each of those contributes exactly one to~\eqref{eq:threebalance}.
+The component at $P$ contributes $t$. When $e\equiv2\pmod3$, its component
+is disjoint from all the selected primes and contributes $\delta$.
+Consequently
+\[
+ R+t+\delta\le b.
+\]
+At least $t-R$ of the selected primes are counted by $K$. Therefore
+\[
+ K\ge t-R\ge2t+\delta-b,
+\]
+which proves~\eqref{eq:fourthcount} and both stated consequences.
+\end{proof}
+
+\begin{corollary}\label{cor:eightfourth}
+If $a_3=2$ and $a_P=8$, then
+\[
+ \boxed{W=8\quad\text{or}\quad(W=7\ \text{and}\ K\ge2).}
+\]
+\end{corollary}
+\begin{proof}
+Theorem~\ref{thm:three} gives $7\le W\le8$. If $W=7$, then $L=1>0$,
+so $P\equiv1\pmod3$. Since $b=t=2$, Theorem~\ref{thm:fourthcount} gives
+$K+2\ge4$, hence $K\ge2$.
+\end{proof}
+
+This adds a restriction to $W\ge7$: a candidate exponent pattern with
+$W=7$ and fewer than two such fourth-power prime divisors is excluded.
+The two primes are distinct even if the contribution measured by $W$ is
+concentrated at a single prime. They are not asserted to be members of $H$.
+The cyclotomic and valuation ingredients are classical; the formal proof
+establishes the stated combination, not its publication priority.
+
+\section{Upper bounds for the contribution outside orders three and six}\label{sec:upper}
+
+The valuation balance immediately gives $W\le a_P$. We now obtain upper bounds
+which do not use $a_P$. Let
+\[
+ T=\{q\in H:w_q>0\},\qquad M=|T|,
+\]
+and let $\varphi$ denote Euler's totient function. By Lemma~\ref{lem:valuation},
+membership in $T$ is equivalent to $q\in H$ and $d_q\mid a_q+1$.
+
+\begin{theorem}\label{thm:upper}
+For each $q\in T$,
+\begin{equation}\label{eq:localupper}
+ w_q=v_P\bigl(\Phi_{d_q}(q)\bigr)
+ \le\left\lfloor\log_P\Phi_{d_q}(q)\right\rfloor
+ \le\varphi(d_q)-1.
+\end{equation}
+Consequently,
+\begin{equation}\label{eq:sumupper}
+ \boxed{W\le
+ \sum_{q\in T}\left\lfloor\log_P\Phi_{d_q}(q)\right\rfloor
+ \le\sum_{q\in T}\bigl(\varphi(d_q)-1\bigr).}
+\end{equation}
+\end{theorem}
+\begin{proof}
+Fix $q\in T$ and put $d=d_q$. Lemma~\ref{lem:valuation} gives
+$w_q=v_P(q^d-1)$. In the factorization
+\[
+ q^d-1=\prod_{r\mid d}\Phi_r(q),
+\]
+only the factor with $r=d$ can be divisible by $P$. Indeed, if
+$P\mid\Phi_r(q)$, then $P\mid q^r-1$, so $d\mid r$. Since also $r\mid d$,
+we must have $r=d$. This proves the equality in~\eqref{eq:localupper}.
+
+The order $d$ is neither $1$ nor $2$, by the argument in
+Corollary~\ref{cor:exponents}. The cyclotomic value is positive and
+\[
+ \Phi_d(q)=\prod_{\substack{\zeta\text{ primitive}\\d\text{-th root of unity}}}
+ |q-\zeta|\le(q+1)^{\varphi(d)}<P^{\varphi(d)}.
+\]
+For the strict inequality, use $q+1<P$, since $q<P$ are odd primes.
+As $P^{w_q}\mid\Phi_d(q)$, we have
+\[
+ P^{w_q}\le\Phi_d(q)<P^{\varphi(d)}.
+\]
+Taking integer logarithms proves both inequalities in~\eqref{eq:localupper}.
+The primes in $H\setminus T$ have zero contribution, so summation proves
+\eqref{eq:sumupper}.
+\end{proof}
+
+\begin{corollary}\label{cor:oddpartupper}
+Write $P-1=2^s m$, with $m$ odd. Then
+\[
+ \boxed{W\le M\bigl(\varphi(m)-1\bigr).}
+\]
+\end{corollary}
+\begin{proof}
+For $q\in T$, we have $d_q\mid P-1$ and $d_q\mid a_q+1$.
+The proof of Corollary~\ref{cor:exponents} gives $4\nmid a_q+1$, hence
+$4\nmid d_q$. It follows that $d_q=u$ or $d_q=2u$, where $u$ is an odd
+divisor of $m$. In either case $\varphi(d_q)=\varphi(u)$. The prime-power
+formula for the totient gives $\varphi(u)\mid\varphi(m)$, so
+$\varphi(d_q)\le\varphi(m)$. Apply Theorem~\ref{thm:upper} to each of the
+$M$ contributing primes.
+\end{proof}
+
+\begin{corollary}\label{cor:exponentupper}
+With $c(N)$ as in Theorem~\ref{thm:main},
+\[
+ a_P\le c(N)+\sum_{q\in T}\bigl(\varphi(d_q)-1\bigr)
+ \le c(N)+M\bigl(\varphi(m)-1\bigr).
+\]
+\end{corollary}
+\begin{proof}
+Combine the lower bound $a_P-c(N)\le W$ with
+Theorem~\ref{thm:upper} and the proof of Corollary~\ref{cor:oddpartupper}.
+\end{proof}
+
+For instance, if $P-1=2^s\cdot5$, every contributing order outside $3$ and $6$
+is $5$ or $10$. Each contribution is at most three, and therefore
+\[
+ W\le3M,\qquad a_P\le3M+c(N).
+\]
+These bounds can be combined with $W\le a_P$ by taking the smaller upper
+bound. Their additional content is a restriction in terms of the smaller
+prime divisors and their orders, independently of the exponent at $P$.
+
+\begin{corollary}\label{cor:nowieferich}
+If $q^{P-1}\not\equiv1\pmod{P^2}$ for every $q\in T$, then $W=M$.
+\end{corollary}
+\begin{proof}
+By Lemma~\ref{lem:valuation}, every $q\in T$ satisfies
+$w_q=v_P(q^{P-1}-1)\ge1$. The stated condition makes this valuation exactly
+one. Summing gives the result.
+\end{proof}
+
+The last hypothesis cannot be discarded merely because $q<P$.
+For example, $\ord_{11}(3)=5$ and $\Phi_5(3)=121=11^2$.
+This is an illustration of the local arithmetic, not an odd perfect number.
+The estimates above use classical cyclotomic facts and are not claimed as
+new results in the literature.
+
+\begin{theorem}[Combined inequality]\label{thm:combined}
+Let $N$ be an odd perfect number, so that
+$\sigma(N)=\sum_{d\mid N}d=2N$, and write
+\[
+ N=\prod_{q\in S}q^{a_q},\qquad
+ S=\{q:q\text{ is prime and }q\mid N\},\qquad P=\max S.
+\]
+For $q\in S\setminus\{P\}$, define
+$d_q=\ord_P(q)$, the multiplicative order of $q$ modulo $P$, and
+$w_q=v_P(\sigma(q^{a_q}))$, where $v_r(x)$ denotes the exponent of the prime
+$r$ in $x$. Set
+\[
+ H=\{q\in S:q<P,\ d_q\notin\{3,6\}\},\quad
+ W=\sum_{q\in H}w_q,\quad
+ T=\{q\in H:w_q>0\},\quad M=|T|.
+\]
+Let $e\in S$ be the unique prime with $a_e$ odd, and define
+\[
+ b=v_3(N),\qquad t=v_3(a_P+1),\qquad
+ \delta=\begin{cases}
+ v_3(e+1)+v_3(a_e+1),&e\equiv2\pmod3,\\
+ 0,&\text{otherwise},
+ \end{cases}
+\]
+\[
+ A(b,u)=\begin{cases}
+ 0,&b<u,\\ 1,&b=u,\\ 2,&b>u.
+ \end{cases}
+\]
+Write $P-1=2^s m$ with $m$ odd. Let $\Phi_d$ denote the $d$-th cyclotomic
+polynomial and $\varphi(d)$ Euler's totient function. Then
+\begin{equation}\label{eq:combined}
+\boxed{\begin{aligned}
+ a_P-A(b,t+\delta)&\le W\\
+ &\le\min\!\left\{a_P,\sum_{q\in T}
+   \left\lfloor\log_P\Phi_{d_q}(q)\right\rfloor\right\}\\
+ &\le\min\!\left\{a_P,\sum_{q\in T}
+   \bigl(\varphi(d_q)-1\bigr)\right\}\\
+ &\le\min\!\left\{a_P,M\bigl(\varphi(m)-1\bigr)\right\}.
+\end{aligned}}
+\end{equation}
+In particular, $a_P\le A(b,t+\delta)+M(\varphi(m)-1)$.
+\end{theorem}
+\begin{proof}
+Theorem~\ref{thm:three} gives the lower bound. The valuation identity
+$a_P=\sum_{q\in S\setminus\{P\}}w_q$ gives $W\le a_P$ because all valuations
+are nonnegative. Theorem~\ref{thm:upper} gives the logarithmic and totient
+upper bounds. Corollary~\ref{cor:oddpartupper} bounds each totient summand by
+$\varphi(m)-1$, proving the final inequality. Comparing the endpoints yields
+the stated consequence for $a_P$.
+\end{proof}
+
+\section{Formal verification}\label{sec:lean}
+
+The accompanying files use Lean~4.19.0 and mathlib revision
+\begin{center}\small\texttt{c44e0c8ee63ca166450922a373c7409c5d26b00b}.\end{center}
+The formal statements take \texttt{Nat.Perfect N}, \texttt{Odd N}, membership of $P$ in \texttt{N.primeFactors}, and maximality of $P$ among those factors as hypotheses. The divisor sums, multiplicative orders, factorization exponents, and valuations are the corresponding arithmetic objects; no valuation balance or order restriction is supplied as an extra hypothesis.
+
+The definition \texttt{component N q} is the geometric sum
+\[
+ \sum_{i=0}^{N.\mathrm{factorization}(q)}q^i.
+\]
+The lemma \texttt{component\_sigma} identifies it with mathlib's divisor-sum function on the prime power. The definition \texttt{ord P q} is \texttt{orderOf (q : ZMod P)}, and \texttt{high N P} is the set $H$ in Section~1.
+
+\begin{center}
+\small
+\begin{tabular}{@{}p{0.27\textwidth}p{0.67\textwidth}@{}}
+\toprule
+Result & Lean declaration \\
+\midrule
+General bound & \texttt{largestPrime\_order\_bound} \\[3pt]
+Bound if $3\nmid N$ & \texttt{largestPrime\_order\_bound\_without\_three} \\[3pt]
+Corollary~\ref{cor:fourth} & \texttt{fourth\_power\_alternative} \\[3pt]
+Corollary~\ref{cor:exception} & \texttt{exceptional\_pair} \\[3pt]
+Corollary~\ref{cor:exponents} & \texttt{high\_contributor\_exponents} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The bounds in~\eqref{eq:lowbound} are also stated explicitly as
+\begin{center}\small
+\texttt{low\_order\_contribution\_bound}\\
+\texttt{low\_order\_contribution\_bound\_without\_three}.
+\end{center}
+Their sums run over contributing primes; the omitted terms have valuation zero.
+
+The additional proof modules implement Sections~\ref{sec:three}
+and~\ref{sec:fourthcount}. They derive the divisibility, size, residue,
+disjointness, and counting arguments from the same odd-perfect-number
+hypotheses. The Euler prime's existence and uniqueness are also proved
+in the project. The README identifies each module and its role.
+The main declarations are:
+\begin{center}
+\small
+\begin{tabular}{@{}p{0.32\textwidth}p{0.62\textwidth}@{}}
+\toprule
+Result & Lean declaration \\
+\midrule
+Theorem~\ref{thm:three}, without $\delta$ & \texttt{three\_adic\_refinement} \\[3pt]
+Theorem~\ref{thm:three}, with $\delta$ & \texttt{euler\_three\_adic\_refinement} \\[3pt]
+Theorem~\ref{thm:fourthcount}, with $\delta$ & \texttt{fourth\_power\_budget\_euler} \\[3pt]
+Theorem~\ref{thm:fourthcount}, without $\delta$ & \texttt{fourth\_power\_budget} \\[3pt]
+Case $b=t+\delta$ & \texttt{saturated\_fourth\_power\_count} \\[3pt]
+Corollary~\ref{cor:eightfourth} & \texttt{eighth\_power\_fourth\_power\_dichotomy} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Natural-number subtraction in the two main Lean inequalities replaces a negative lower bound by zero. This is equivalent to the displayed mathematical inequality, since the sum of valuations is nonnegative. The hypothesis $P^4\mid N$ in Corollary~\ref{cor:fourth} is represented by $4\le N.\mathrm{factorization}(P)$, and its congruence by the equivalent divisibility $P^2\mid q^{P-1}-1$. The formal exceptional-pair statement uses membership in the set of contributing order-$3$ primes; the polynomial and shifted-exponent divisibilities follow from the included lemmas.
+
+The verification entry point is \texttt{Audit.lean}. It checks the named declarations and prints their axiom dependencies. The source contains no \texttt{sorry}, \texttt{admit}, additional axioms, or use of \texttt{native\_decide}. The audit reports only Lean's standard axioms \texttt{propext}, \texttt{Classical.choice}, and \texttt{Quot.sound}. Compilation output and reproduction instructions are included in the archive. Formal verification establishes the stated implications; it does not establish publication priority.
+
+The upper bounds in Section~\ref{sec:upper} are formalized in
+\texttt{CyclotomicUpper.lean}.
+
+The set \texttt{highContributors N P} is $T$;
+it is defined by filtering $H$ for divisibility of the component by $P$.
+The definition \texttt{cycloValue q d} is the absolute value of the integer
+$\Phi_d(q)$, whose positivity for $q>1$ is proved using mathlib.
+Integer logarithms are represented by \texttt{Nat.log}.
+
+\begin{center}
+\small
+\begin{tabular}{@{}p{0.32\textwidth}p{0.62\textwidth}@{}}
+\toprule
+Result & Lean declaration \\
+\midrule
+Component valuation identity & \texttt{component\_val\_eq\_cycloValue} \\[3pt]
+Logarithmic upper bound & \texttt{highWeight\_log\_upper} \\[3pt]
+Comparison of bounds & \texttt{logarithmic\_bound\_le\_totient\_bound} \\[3pt]
+Totient upper bound & \texttt{highWeight\_totient\_upper} \\[3pt]
+Corollary~\ref{cor:oddpartupper} & \texttt{highWeight\_odd\_part\_upper} \\[3pt]
+Corollary~\ref{cor:exponentupper}, first bound & \texttt{largest\_exponent\_totient\_upper} \\[3pt]
+Corollary~\ref{cor:nowieferich} & \texttt{highWeight\_eq\_card\_of\_no\_wieferich} \\
+Theorem~\ref{thm:combined} & \texttt{combined\_inequality} \\[3pt]
+Its exponent consequence & \texttt{combined\_exponent\_constraint} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{thebibliography}{9}
+\bibitem{ClaytonHansen}
+G.~Clayton and C.~Hansen,
+\emph{On inequalities involving counts of the prime factors of an odd perfect number},
+Integers \textbf{23} (2023), Paper A79.
+\href{https://math.colgate.edu/~integers/x79/x79.pdf}{Full text}.
+
+\bibitem{Voight}
+J.~Voight,
+\emph{On the nonexistence of odd perfect numbers},
+MASS Selecta, American Mathematical Society, 2003, pp.~293--300.
+\href{https://jvoight.github.io/articles/opn-mass-rev-060211.pdf}{Author's version}.
+\end{thebibliography}
+\end{document}

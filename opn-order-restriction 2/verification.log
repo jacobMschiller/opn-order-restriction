@@ -1,0 +1,194 @@
+Lean verification of Orders Three and Six, including the combined inequality
+UTC: 2026-10-09T08:27:26.246386+00:00
+mathlib revision: c44e0c8ee63ca166450922a373c7409c5d26b00b
+Direct compiler invocation against the pinned mathlib cache; see README.md.
+SHA256 cad3171c535d2781b77154cd638c42019e0252eeb807a6d5cd72e24dc53e6bc5  LargestPrimeOrders.lean
+SHA256 34bdb8081238d40739e179f522994483411c3e9948013fec51afa149b30088ed  Consequences.lean
+SHA256 34a2bf6415e4dd6981a7de00109af5809d5ba784e1fb0b5bc2b45609aa458ae2  ThreeAdicRefinement.lean
+SHA256 90230f1af2f05c6fe9f1e6225f1a19d149234104fc9efc4f3a0c996c78808baa  RefinementConsequences.lean
+SHA256 d77ce548099e83228bbbe8b5ab5e72f80e647a2cd38b547d2f6d0283dfa53e08  CubicCofactors.lean
+SHA256 d766eb05aa80bd9f4ebcb6041c2da5e65837c4f02a7de426f49ad5512590a14a  FourthPowerBudget.lean
+SHA256 c09c71899248917c4c8129eee2d3d1a6472aaf9be6b90f053a3f7eda77d30044  CyclotomicUpper.lean
+SHA256 9232c6a737bbb782b4c7f339ca8b9b539697316e043f3ecb64a2dc80a1216d8b  CombinedBounds.lean
+SHA256 55de5ea617c91d947f4adb009f1eda6427a43ff77d7b12fcce6034bcf7a41db7  Audit.lean
+SHA256 93a8855577496251958b23267b82b057d9b02dcfaa832a7a579cc674979f9a3a  lakefile.lean
+SHA256 55e97be96000b5e9e290c9e74482e5e317861499a5540353ce845471bded8cea  lean-toolchain
+
+$ lean --version
+Lean (version 4.19.0, x86_64-unknown-linux-gnu, commit 6caaee842e94, Release)
+exit status: 0
+
+$ lean -o LargestPrimeOrders.olean LargestPrimeOrders.lean
+exit status: 0
+
+$ lean -o Consequences.olean Consequences.lean
+exit status: 0
+
+$ lean -o ThreeAdicRefinement.olean ThreeAdicRefinement.lean
+exit status: 0
+
+$ lean -o RefinementConsequences.olean RefinementConsequences.lean
+exit status: 0
+
+$ lean -o CubicCofactors.olean CubicCofactors.lean
+exit status: 0
+
+$ lean -o FourthPowerBudget.olean FourthPowerBudget.lean
+exit status: 0
+
+$ lean -o CyclotomicUpper.olean CyclotomicUpper.lean
+exit status: 0
+
+$ lean -o CombinedBounds.olean CombinedBounds.lean
+exit status: 0
+
+$ lean -o /workspace/scratch/24d0b85527e7/tmp/lean-tools/lakefile.olean lakefile.lean
+exit status: 0
+
+$ lean Audit.lean
+LargestPrimeOrders.largestPrime_order_bound {N P : ℕ} (hN : N.Perfect) (hodd : Odd N) (hPmem : P ∈ N.primeFactors)
+  (hmax : ∀ q ∈ N.primeFactors, q ≤ P) : N.factorization P - 2 ≤ ∑ q ∈ high N P, padicValNat P (component N q)
+LargestPrimeOrders.largestPrime_order_bound_without_three {N P : ℕ} (hN : N.Perfect) (hodd : Odd N)
+  (hPmem : P ∈ N.primeFactors) (hmax : ∀ q ∈ N.primeFactors, q ≤ P) (hnot3 : ¬3 ∣ N) :
+  N.factorization P - 1 ≤ ∑ q ∈ high N P, padicValNat P (component N q)
+LargestPrimeOrders.low_order_contribution_bound {N P : ℕ} (hN : N.Perfect) (hodd : Odd N) (hPmem : P ∈ N.primeFactors)
+  (hmax : ∀ q ∈ N.primeFactors, q ≤ P) :
+  ∑ q ∈ sources N P 3, padicValNat P (component N q) + ∑ q ∈ sources N P 6, padicValNat P (component N q) ≤ 2
+LargestPrimeOrders.low_order_contribution_bound_without_three {N P : ℕ} (hN : N.Perfect) (hodd : Odd N)
+  (hPmem : P ∈ N.primeFactors) (hmax : ∀ q ∈ N.primeFactors, q ≤ P) (hnot3 : ¬3 ∣ N) :
+  ∑ q ∈ sources N P 3, padicValNat P (component N q) + ∑ q ∈ sources N P 6, padicValNat P (component N q) ≤ 1
+LargestPrimeOrders.fourth_power_alternative {N P : ℕ} (hN : N.Perfect) (hodd : Odd N) (hPmem : P ∈ N.primeFactors)
+  (hmax : ∀ q ∈ N.primeFactors, q ≤ P) (hfour : 4 ≤ N.factorization P) :
+  (∃ u ∈ high N P, ∃ v ∈ high N P, u ≠ v ∧ P ∣ component N u ∧ P ∣ component N v) ∨
+    ∃ q ∈ high N P, P ∣ component N q ∧ P ^ 2 ∣ q ^ (P - 1) - 1
+LargestPrimeOrders.exceptional_pair {N P : ℕ} (hN : N.Perfect) (hodd : Odd N) (hPmem : P ∈ N.primeFactors)
+  (hmax : ∀ q ∈ N.primeFactors, q ≤ P) (hno : ∀ q ∈ high N P, ¬P ∣ component N q) :
+  N.factorization P = 1 ∨
+    N.factorization P = 2 ∧ 3 ∣ N ∧ ∃ u ∈ sources N P 3, ∃ v ∈ sources N P 3, u ≠ v ∧ u + v + 1 = P
+LargestPrimeOrders.high_contributor_exponents {N P q : ℕ} (hN : N.Perfect) (hodd : Odd N) (hPmem : P ∈ N.primeFactors)
+  (hq : q ∈ high N P) (hd : P ∣ component N q) :
+  4 ≤ N.factorization q ∧ (Odd (N.factorization q) → 9 ≤ N.factorization q)
+'LargestPrimeOrders.largestPrime_order_bound' depends on axioms: [propext, Classical.choice, Quot.sound]
+'LargestPrimeOrders.largestPrime_order_bound_without_three' depends on axioms: [propext, Classical.choice, Quot.sound]
+'LargestPrimeOrders.low_order_contribution_bound' depends on axioms: [propext, Classical.choice, Quot.sound]
+'LargestPrimeOrders.low_order_contribution_bound_without_three' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'LargestPrimeOrders.fourth_power_alternative' depends on axioms: [propext, Classical.choice, Quot.sound]
+'LargestPrimeOrders.exceptional_pair' depends on axioms: [propext, Classical.choice, Quot.sound]
+'LargestPrimeOrders.high_contributor_exponents' depends on axioms: [propext, Classical.choice, Quot.sound]
+LargestPrimeOrders.three_adic_refinement {N P : ℕ} (hN : N.Perfect) (hodd : Odd N) (hPmem : P ∈ N.primeFactors)
+  (hmax : ∀ q ∈ N.primeFactors, q ≤ P) :
+  N.factorization P - threeAllowance (padicValNat 3 N) (padicValNat 3 (N.factorization P + 1)) ≤ highWeight N P
+LargestPrimeOrders.euler_three_adic_refinement {N P e : ℕ} (hN : N.Perfect) (hodd : Odd N) (hPmem : P ∈ N.primeFactors)
+  (hmax : ∀ q ∈ N.primeFactors, q ≤ P) (hemem : e ∈ N.primeFactors) (heodd : Odd (N.factorization e)) :
+  N.factorization P - threeAllowance (padicValNat 3 N) (padicValNat 3 (N.factorization P + 1) + eulerThreeDelta N e) ≤
+    highWeight N P
+LargestPrimeOrders.exists_unique_odd_exponent_prime {N : ℕ} (hN : N.Perfect) (hodd : Odd N) :
+  ∃! e, e ∈ N.primeFactors ∧ Odd (N.factorization e)
+LargestPrimeOrders.exists_euler_three_adic_refinement {N P : ℕ} (hN : N.Perfect) (hodd : Odd N)
+  (hPmem : P ∈ N.primeFactors) (hmax : ∀ q ∈ N.primeFactors, q ≤ P) :
+  ∃ e ∈ N.primeFactors,
+    Odd (N.factorization e) ∧
+      N.factorization P -
+          threeAllowance (padicValNat 3 N) (padicValNat 3 (N.factorization P + 1) + eulerThreeDelta N e) ≤
+        highWeight N P
+LargestPrimeOrders.eighth_power_refinement {N P : ℕ} (hN : N.Perfect) (hodd : Odd N) (hPmem : P ∈ N.primeFactors)
+  (hmax : ∀ q ∈ N.primeFactors, q ≤ P) (h3 : N.factorization 3 = 2) (h8 : N.factorization P = 8) : 7 ≤ highWeight N P
+LargestPrimeOrders.eighth_power_euler_refinement {N P e : ℕ} (hN : N.Perfect) (hodd : Odd N)
+  (hPmem : P ∈ N.primeFactors) (hmax : ∀ q ∈ N.primeFactors, q ≤ P) (h3 : N.factorization 3 = 2)
+  (h8 : N.factorization P = 8) (hemem : e ∈ N.primeFactors) (heodd : Odd (N.factorization e)) (he2 : e % 3 = 2) :
+  highWeight N P = 8
+LargestPrimeOrders.no_three_square_highWeight {N P : ℕ} (hN : N.Perfect) (hodd : Odd N) (hPmem : P ∈ N.primeFactors)
+  (hmax : ∀ q ∈ N.primeFactors, q ≤ P) (hnot3 : ¬3 ∣ N) (h2 : N.factorization P = 2) : highWeight N P = 2
+LargestPrimeOrders.no_three_square_alternative {N P : ℕ} (hN : N.Perfect) (hodd : Odd N) (hPmem : P ∈ N.primeFactors)
+  (hmax : ∀ q ∈ N.primeFactors, q ≤ P) (hnot3 : ¬3 ∣ N) (h2 : N.factorization P = 2) :
+  (∃ u ∈ high N P,
+      ∃ v ∈ high N P, u ≠ v ∧ P ∣ component N u ∧ P ∣ component N v ∧ 4 ≤ N.factorization u ∧ 4 ≤ N.factorization v) ∨
+    ∃ q ∈ high N P, P ∣ component N q ∧ P ^ 2 ∣ q ^ (P - 1) - 1 ∧ 4 ≤ N.factorization q
+'LargestPrimeOrders.three_adic_refinement' depends on axioms: [propext, Classical.choice, Quot.sound]
+'LargestPrimeOrders.euler_three_adic_refinement' depends on axioms: [propext, Classical.choice, Quot.sound]
+'LargestPrimeOrders.exists_unique_odd_exponent_prime' depends on axioms: [propext, Classical.choice, Quot.sound]
+'LargestPrimeOrders.exists_euler_three_adic_refinement' depends on axioms: [propext, Classical.choice, Quot.sound]
+'LargestPrimeOrders.eighth_power_refinement' depends on axioms: [propext, Classical.choice, Quot.sound]
+'LargestPrimeOrders.eighth_power_euler_refinement' depends on axioms: [propext, Classical.choice, Quot.sound]
+'LargestPrimeOrders.no_three_square_highWeight' depends on axioms: [propext, Classical.choice, Quot.sound]
+'LargestPrimeOrders.no_three_square_alternative' depends on axioms: [propext, Classical.choice, Quot.sound]
+LargestPrimeOrders.cubic_distinct_candidates {N P : ℕ} (hN : N.Perfect) (hodd : Odd N) (hPmem : P ∈ N.primeFactors)
+  (hmax : ∀ q ∈ N.primeFactors, q ≤ P) (hm : P % 3 = 1) :
+  ∃ S,
+    S.card = padicValNat 3 (N.factorization P + 1) ∧
+      ∀ q ∈ S, q ∈ N.primeFactors ∧ q < P ∧ q % 3 = 1 ∧ 2 ≤ N.factorization q
+LargestPrimeOrders.fourth_power_budget_euler {N P e : ℕ} (hN : N.Perfect) (hodd : Odd N) (hPmem : P ∈ N.primeFactors)
+  (hmax : ∀ q ∈ N.primeFactors, q ≤ P) (hm : P % 3 = 1) (hemem : e ∈ N.primeFactors) (heodd : Odd (N.factorization e)) :
+  2 * padicValNat 3 (N.factorization P + 1) + eulerThreeDelta N e ≤ padicValNat 3 N + (fourthPrimes N P).card
+LargestPrimeOrders.fourth_power_budget {N P : ℕ} (hN : N.Perfect) (hodd : Odd N) (hPmem : P ∈ N.primeFactors)
+  (hmax : ∀ q ∈ N.primeFactors, q ≤ P) (hm : P % 3 = 1) :
+  2 * padicValNat 3 (N.factorization P + 1) ≤ padicValNat 3 N + (fourthPrimes N P).card
+LargestPrimeOrders.saturated_fourth_power_count {N P e : ℕ} (hN : N.Perfect) (hodd : Odd N) (hPmem : P ∈ N.primeFactors)
+  (hmax : ∀ q ∈ N.primeFactors, q ≤ P) (hm : P % 3 = 1) (hemem : e ∈ N.primeFactors) (heodd : Odd (N.factorization e))
+  (hsat : padicValNat 3 N = padicValNat 3 (N.factorization P + 1) + eulerThreeDelta N e) :
+  padicValNat 3 (N.factorization P + 1) ≤ (fourthPrimes N P).card
+LargestPrimeOrders.eighth_power_fourth_power_dichotomy {N P : ℕ} (hN : N.Perfect) (hodd : Odd N)
+  (hPmem : P ∈ N.primeFactors) (hmax : ∀ q ∈ N.primeFactors, q ≤ P) (h3 : N.factorization 3 = 2)
+  (h8 : N.factorization P = 8) : highWeight N P = 8 ∨ highWeight N P = 7 ∧ 2 ≤ (fourthPrimes N P).card
+'LargestPrimeOrders.cubic_distinct_candidates' depends on axioms: [propext, Classical.choice, Quot.sound]
+'LargestPrimeOrders.fourth_power_budget_euler' depends on axioms: [propext, Classical.choice, Quot.sound]
+'LargestPrimeOrders.fourth_power_budget' depends on axioms: [propext, Classical.choice, Quot.sound]
+'LargestPrimeOrders.saturated_fourth_power_count' depends on axioms: [propext, Classical.choice, Quot.sound]
+'LargestPrimeOrders.eighth_power_fourth_power_dichotomy' depends on axioms: [propext, Classical.choice, Quot.sound]
+LargestPrimeOrders.component_val_eq_cycloValue {N P q : ℕ} (hN : N.Perfect) (hodd : Odd N) (hPmem : P ∈ N.primeFactors)
+  (hqmem : q ∈ N.primeFactors) (hqP : q < P) (hmax : ∀ r ∈ N.primeFactors, r ≤ P) (hdiv : P ∣ component N q) :
+  padicValNat P (component N q) = padicValNat P (cycloValue q (ord P q))
+LargestPrimeOrders.high_component_totient_upper {N P q : ℕ} (hN : N.Perfect) (hodd : Odd N) (hPmem : P ∈ N.primeFactors)
+  (hmax : ∀ r ∈ N.primeFactors, r ≤ P) (hq : q ∈ high N P) (hdiv : P ∣ component N q) :
+  padicValNat P (component N q) ≤ (ord P q).totient - 1
+LargestPrimeOrders.highWeight_log_upper {N P : ℕ} (hN : N.Perfect) (hodd : Odd N) (hPmem : P ∈ N.primeFactors)
+  (hmax : ∀ r ∈ N.primeFactors, r ≤ P) : highWeight N P ≤ ∑ q ∈ highContributors N P, Nat.log P (cycloValue q (ord P q))
+LargestPrimeOrders.logarithmic_bound_le_totient_bound {N P : ℕ} (hodd : Odd N) (hPmem : P ∈ N.primeFactors) :
+  ∑ q ∈ highContributors N P, Nat.log P (cycloValue q (ord P q)) ≤ ∑ q ∈ highContributors N P, ((ord P q).totient - 1)
+LargestPrimeOrders.highWeight_totient_upper {N P : ℕ} (hN : N.Perfect) (hodd : Odd N) (hPmem : P ∈ N.primeFactors)
+  (hmax : ∀ r ∈ N.primeFactors, r ≤ P) : highWeight N P ≤ ∑ q ∈ highContributors N P, ((ord P q).totient - 1)
+LargestPrimeOrders.highWeight_odd_part_upper {N P m s : ℕ} (hN : N.Perfect) (hodd : Odd N) (hPmem : P ∈ N.primeFactors)
+  (hmax : ∀ r ∈ N.primeFactors, r ≤ P) (hm : 0 < m) (hfactor : P - 1 = 2 ^ s * m) :
+  highWeight N P ≤ (highContributors N P).card * (m.totient - 1)
+LargestPrimeOrders.largest_exponent_totient_upper {N P : ℕ} (hN : N.Perfect) (hodd : Odd N) (hPmem : P ∈ N.primeFactors)
+  (hmax : ∀ r ∈ N.primeFactors, r ≤ P) :
+  N.factorization P ≤ ∑ q ∈ highContributors N P, ((ord P q).totient - 1) + if 3 ∣ N then 2 else 1
+LargestPrimeOrders.highWeight_eq_card_of_no_wieferich {N P : ℕ} (hN : N.Perfect) (hodd : Odd N)
+  (hPmem : P ∈ N.primeFactors) (hmax : ∀ r ∈ N.primeFactors, r ≤ P)
+  (hnw : ∀ q ∈ highContributors N P, ¬P ^ 2 ∣ q ^ (P - 1) - 1) : highWeight N P = (highContributors N P).card
+'LargestPrimeOrders.component_val_eq_cycloValue' depends on axioms: [propext, Classical.choice, Quot.sound]
+'LargestPrimeOrders.high_component_totient_upper' depends on axioms: [propext, Classical.choice, Quot.sound]
+'LargestPrimeOrders.highWeight_log_upper' depends on axioms: [propext, Classical.choice, Quot.sound]
+'LargestPrimeOrders.logarithmic_bound_le_totient_bound' depends on axioms: [propext, Classical.choice, Quot.sound]
+'LargestPrimeOrders.highWeight_totient_upper' depends on axioms: [propext, Classical.choice, Quot.sound]
+'LargestPrimeOrders.highWeight_odd_part_upper' depends on axioms: [propext, Classical.choice, Quot.sound]
+'LargestPrimeOrders.largest_exponent_totient_upper' depends on axioms: [propext, Classical.choice, Quot.sound]
+'LargestPrimeOrders.highWeight_eq_card_of_no_wieferich' depends on axioms: [propext, Classical.choice, Quot.sound]
+LargestPrimeOrders.combined_inequality {N P e m s : ℕ} (hN : N.Perfect) (hodd : Odd N) (hPmem : P ∈ N.primeFactors)
+  (hmax : ∀ q ∈ N.primeFactors, q ≤ P) (hemem : e ∈ N.primeFactors) (heodd : Odd (N.factorization e)) (hm : 0 < m)
+  (hfactor : P - 1 = 2 ^ s * m) :
+  N.factorization P - threeAllowance (padicValNat 3 N) (padicValNat 3 (N.factorization P + 1) + eulerThreeDelta N e) ≤
+      highWeight N P ∧
+    highWeight N P ≤ min (N.factorization P) (logarithmicCapacity N P) ∧
+      logarithmicCapacity N P ≤ totientCapacity N P ∧ totientCapacity N P ≤ oddPartCapacity N P m
+LargestPrimeOrders.combined_exponent_constraint {N P e m s : ℕ} (hN : N.Perfect) (hodd : Odd N)
+  (hPmem : P ∈ N.primeFactors) (hmax : ∀ q ∈ N.primeFactors, q ≤ P) (hemem : e ∈ N.primeFactors)
+  (heodd : Odd (N.factorization e)) (hm : 0 < m) (hfactor : P - 1 = 2 ^ s * m) :
+  N.factorization P ≤
+    threeAllowance (padicValNat 3 N) (padicValNat 3 (N.factorization P + 1) + eulerThreeDelta N e) +
+      oddPartCapacity N P m
+LargestPrimeOrders.exists_combined_exponent_constraint {N P m s : ℕ} (hN : N.Perfect) (hodd : Odd N)
+  (hPmem : P ∈ N.primeFactors) (hmax : ∀ q ∈ N.primeFactors, q ≤ P) (hm : 0 < m) (hfactor : P - 1 = 2 ^ s * m) :
+  ∃ e ∈ N.primeFactors,
+    Odd (N.factorization e) ∧
+      N.factorization P ≤
+        threeAllowance (padicValNat 3 N) (padicValNat 3 (N.factorization P + 1) + eulerThreeDelta N e) +
+          oddPartCapacity N P m
+'LargestPrimeOrders.combined_inequality' depends on axioms: [propext, Classical.choice, Quot.sound]
+'LargestPrimeOrders.combined_exponent_constraint' depends on axioms: [propext, Classical.choice, Quot.sound]
+'LargestPrimeOrders.exists_combined_exponent_constraint' depends on axioms: [propext, Classical.choice, Quot.sound]
+exit status: 0
+
+All listed compiler and audit commands completed successfully.
